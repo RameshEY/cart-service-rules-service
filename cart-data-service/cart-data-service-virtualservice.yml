@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: cart-data-service-vs
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - cart-gateway.default.svc.cluster.local
+  http:
+  - match:
+    - uri:
+        exact: /cartdata
+    route:
+    - destination:
+        host: cartdata.default.svc.cluster.local
+        port:
+          number: 6060

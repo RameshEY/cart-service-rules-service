@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: cart-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: cart-service-vs
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - cart-gateway.default.svc.cluster.local
+  http:
+  - match:
+    - uri:
+        exact: /cartservice
+    route:
+    - destination:
+        host: cartservice.default.svc.cluster.local
+        port:
+          number: 7070

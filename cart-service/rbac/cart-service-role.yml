@@ -1,0 +1,23 @@
+##################################################################################################
+# Cart service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: cartservice
+  labels:
+    app: cartservice
+    service: cartservice
+spec:
+  ports:
+    - port: 7070
+      name: http
+  selector:
+    app: cartservice
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cart-app
+  labels:
+    account: cartservice
