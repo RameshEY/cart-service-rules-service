@@ -1,6 +1,42 @@
 ##################################################################################################
 # Cart service
 ##################################################################################################
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: cart-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: cart-data-service-vs
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - cart-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /cartdata
+    - uri:
+        exact: /cartdata/swagger-ui.html
+    route:
+    - destination:
+        host: cartdata
+        port:
+          number: 6060
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -22,7 +58,7 @@ metadata:
   labels:
     account: cartdata
 ---
-apiVersion: v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cart-data-service
@@ -44,10 +80,12 @@ spec:
       serviceAccountName: cart-data-app
       containers:
         - name: cartdata
-          image: docker.io/biswabhusan/cart-data-service:3
+          image: docker.io/biswabhusan/cart-data-service:5
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 6060
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: local
+            - name: CASSANDRA_HOST_URL
+              value: 192.168.1.5:8091
