@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 mvn clean package -DskipTests
-docker build -t biswabhusan/spring-app-configmap:v2 .
+docker build -t testdockerramesh/spring-app-configmap:v2 .
 kubectl delete -f deployment-with-configmap.yml
 kubectl delete -f app-config.yml
 kubectl create -f deployment-with-configmap.yml
