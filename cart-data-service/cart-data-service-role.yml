@@ -80,7 +80,7 @@ spec:
       serviceAccountName: cart-data-app
       containers:
         - name: cartdata
-          image: docker.io/biswabhusan/cart-data-service:5
+          image: docker.io/testdockerramesh/cart-data-service
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 6060
